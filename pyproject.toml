@@ -10,5 +10,6 @@ dependencies = [
     "uvicorn",
     "torch",
     "torchvision",
-    "pillow"
+    "pillow",
+    "requests"
 ]

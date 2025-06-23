@@ -1,7 +1,8 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from torchvision import models, transforms
 import torch
+import requests
 from PIL import Image
 import io
 
@@ -44,3 +45,25 @@ async def predict(file: UploadFile = File(...)):
         "result": is_hindu_gm,
         "confidence": prob
     }
+
+@app.post("/predict-url")
+async def predict_from_url(request: Request):
+    body = await request.json()
+    url = body.get("url")
+    if not url:
+        raise HTTPException(status_code=400, detail="Missing 'url' in request body")
+
+    try:
+        response = requests.get(url, timeout=5)
+        response.raise_for_status()
+        img = Image.open(io.BytesIO(response.content)).convert("RGB")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to fetch image: {str(e)}")
+
+    img_tensor = transform(img).unsqueeze(0).to(device)
+    with torch.no_grad():
+        output = model(img_tensor)
+        prob = torch.sigmoid(output).item()
+        is_hindu = prob > 0.5
+
+    return {"result": is_hindu, "confidence": prob}
