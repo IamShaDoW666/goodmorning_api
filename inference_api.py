@@ -39,7 +39,7 @@ async def predict(file: UploadFile = File(...)):
     with torch.no_grad():
         output = model(img_tensor)
         prob = torch.sigmoid(output).item()
-        is_hindu_gm = prob > 0.5
+        is_hindu_gm = prob > 0.85
 
     return {
         "result": is_hindu_gm,
