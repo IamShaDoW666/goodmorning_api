@@ -11,5 +11,5 @@ dependencies = [
     "torch",
     "torchvision",
     "pillow",
-    "requests"
+    "requests",
 ]

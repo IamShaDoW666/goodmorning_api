@@ -19,7 +19,7 @@ device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if 
 
 model = models.resnet50(pretrained=False)
 model.fc = torch.nn.Linear(model.fc.in_features, 1)
-model.load_state_dict(torch.load("hindu_goodmorning_model.pth", map_location=device))
+model.load_state_dict(torch.load("modelv3.pth", map_location=device))
 model.eval().to(device)
 
 # Preprocessing
@@ -64,6 +64,6 @@ async def predict_from_url(request: Request):
     with torch.no_grad():
         output = model(img_tensor)
         prob = torch.sigmoid(output).item()
-        is_hindu = prob > 0.5
+        is_hindu = prob > 0.88
 
     return {"result": is_hindu, "confidence": prob}
