@@ -32,7 +32,7 @@ transform = transforms.Compose([
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the Hindu GM Detection API!"}
+    return {"message": "Hello World!", "status": "API is running"}
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
