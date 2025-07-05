@@ -30,6 +30,10 @@ transform = transforms.Compose([
                          [0.229, 0.224, 0.225])
 ])
 
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Hindu GM Detection API!"}
+
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
     contents = await file.read()
